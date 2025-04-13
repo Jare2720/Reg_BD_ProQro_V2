@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de Clientes - Proyéctate en Querétaro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    button {
+      background: #2980b9;
+      color: white;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #3498db;
+    }
+    .message {
+      margin-top: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registro de Clientes</h2>
+    <form id="registroForm">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" required />
+
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" name="correo" required />
+
+      <label for="tipo">Tipo de propiedad</label>
+      <input type="text" id="tipo" name="tipo" />
+
+      <label for="zona">Zona de interés</label>
+      <input type="text" id="zona" name="zona" placeholder="Ej: Zibatá, Centro, El Refugio" />
+
+      <label for="presupuesto">Rango de presupuesto</label>
+      <input type="text" id="presupuesto" name="presupuesto" />
+
+      <label for="origen">¿Cómo te enteraste de nosotros?</label>
+      <select id="origen" name="origen">
+        <option value="">Selecciona una opción</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Instagram">Instagram</option>
+        <option value="Recomendación">Recomendación</option>
+        <option value="Página Web">Página Web</option>
+        <option value="EasyBroker">EasyBroker</option>
+        <option value="Proppit">Proppit</option>
+      </select>
+
+      <label for="motivo">¿Buscas para vivir o invertir?</label>
+      <select id="motivo" name="motivo">
+        <option value="">Selecciona una opción</option>
+        <option value="Vivir">Vivir</option>
+        <option value="Invertir">Invertir</option>
+      </select>
+
+      <label for="tiempo">¿En cuánto tiempo deseas comprar?</label>
+      <input type="text" id="tiempo" name="tiempo" />
+
+      <label for="comentarios">Comentarios adicionales</label>
+      <textarea id="comentarios" name="comentarios" rows="3"></textarea>
+
+      <button type="submit">Enviar registro</button>
+      <div class="message" id="mensaje"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("registroForm");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      mensaje.textContent = "Enviando...";
+
+      const datos = {
+        nombre: form.nombre.value,
+        telefono: form.telefono.value,
+        correo: form.correo.value,
+        tipo: form.tipo.value,
+        zona: form.zona.value,
+        presupuesto: form.presupuesto.value,
+        origen: form.origen.value,
+        motivo: form.motivo.value,
+        tiempo: form.tiempo.value,
+        comentarios: form.comentarios.value
+      };
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzAvMg1PXjcGxDMv2-yR-B2zoRI7KBsP07jL855uQc6O4Y48S_cTXg6964IK6fN7qN6/exec", {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        });
+
+        const resultado = await res.json();
+        if (resultado.success) {
+          mensaje.textContent = "✅ Registro enviado exitosamente.";
+          form.reset();
+        } else {
+          throw new Error(resultado.message || "Error desconocido.");
+        }
+      } catch (err) {
+        console.error(err);
+        mensaje.textContent = "❌ Hubo un error al enviar el registro. Intenta más tarde.";
+      }
+    });
+  </script>
+</body>
+</html>
